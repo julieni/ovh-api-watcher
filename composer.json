@@ -1,0 +1,15 @@
+{
+    "name": "julieni/ovh-api-watcher",
+    "description": "Watcher for OVH API changes",
+    "type": "project",
+    "require": {
+        "phpspec/php-diff": "^1.1"
+    },
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Julien Issler",
+            "email": "julien@issler.net"
+        }
+    ]
+}
