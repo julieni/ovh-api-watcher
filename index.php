@@ -9,7 +9,8 @@ if(!is_dir($dir)){
     $root = json_decode(file_get_contents($baseurl));
     file_put_contents($dir.'/root.json', json_encode($root, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     foreach($root->apis as $api){
-        $data = json_decode(file_get_contents($root->basePath.$api->path.'.'.$api->format[0]));
+        $data = json_decode(file_get_contents($root->basePath.$api->path.'.'.$api->format[0]), true);
+        sortJSON($data);
         file_put_contents($dir.'/'.str_replace('/','_',$api->path).'.'.$api->format[0], json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 }
@@ -24,6 +25,15 @@ krsort($dates);
 
 $date_to = (isset($_GET['date_to']) && isset($dates[$_GET['date_to']])) ? $_GET['date_to'] : array_values($dates)[0];
 $date_from = (isset($_GET['date_from']) && isset($dates[$_GET['date_from']])) ? $_GET['date_from'] : array_values($dates)[1];
+
+
+function sortJSON(&$json){
+    ksort($json, SORT_NATURAL | SORT_FLAG_CASE);
+    foreach($json as $k=>$v){
+        if(is_array($v))
+            sortJSON($json[$k]);
+    }
+}
 
 ?><!DOCTYPE html>
 <html lang="en-us">
