@@ -8,10 +8,16 @@ if(!is_dir($dir)){
     $baseurl = 'https://api.ovh.com/1.0/';
     $root = json_decode(file_get_contents($baseurl));
     file_put_contents($dir.'/root.json', json_encode($root, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-    foreach($root->apis as $api){
+}
+else{
+    $root = json_decode(file_get_contents($dir.'/root.json'));
+}
+foreach($root->apis as $api){
+    $file = $dir.'/'.str_replace('/','_',$api->path).'.'.$api->format[0];
+    if(!file_exists($file) || file_get_contents($file) === 'null'){
         $data = json_decode(file_get_contents($root->basePath.$api->path.'.'.$api->format[0]), true);
         sortJSON($data);
-        file_put_contents($dir.'/'.str_replace('/','_',$api->path).'.'.$api->format[0], json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 }
 
